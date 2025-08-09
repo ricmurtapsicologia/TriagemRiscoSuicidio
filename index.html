@@ -1,661 +1,667 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EIR-RS – Escala Integrada de Risco de Suicídio (Triagem)</title>
-
-  <!-- URL canônica -->
-  <link rel="canonical" href="https://ricmurtapsicologia.github.io/TriagemRiscoSuicidio/" />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="https://i.pinimg.com/736x/d9/05/47/d90547059a00ec26b02c182e15a24033.jpg" />
-
-  <!-- Open Graph para pré-visualização no WhatsApp -->
-  <meta property="og:title" content="EIR-RS – Escala Integrada de Risco de Suicídio (Triagem)" />
-  <meta property="og:description" content="Ferramenta clínica para triagem e avaliação de risco de suicídio." />
-  <meta property="og:image" content="https://i.pinimg.com/736x/d9/05/47/d90547059a00ec26b02c182e15a24033.jpg" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://ricmurtapsicologia.github.io/TriagemRiscoSuicidio/" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>EIR-RS – Escala Integrada de Risco de Suicídio (Triagem)</title>
+	<!-- URL canônica -->
+	<link rel="canonical" href="https://ricmurtapsicologia.github.io/TriagemRiscoSuicidio/" />
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" href="https://i.pinimg.com/736x/d9/05/47/d90547059a00ec26b02c182e15a24033.jpg" />
+	<!-- Open Graph para pré-visualização no WhatsApp -->
+	<meta property="og:title" content="EIR-RS – Escala Integrada de Risco de Suicídio (Triagem)" />
+	<meta property="og:description" content="Ferramenta clínica para triagem e avaliação de risco de suicídio." />
+	<meta property="og:image" content="https://i.pinimg.com/736x/d9/05/47/d90547059a00ec26b02c182e15a24033.jpg" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://ricmurtapsicologia.github.io/TriagemRiscoSuicidio/" />
+	<style>
+		/* =========================
+		   Variáveis e Resets
+		========================== */
+		:root{
+		  --bg:#0b0f14;
+		  --card:#111827;
+		  --muted:#9ca3af;
+		  --text:#e5e7eb;
+		  --accent:#22d3ee;
+		
+		  --radius:16px;
+		  --radius-sm:10px;
+		  --space-1:6px;
+		  --space-2:10px;
+		  --space-3:14px;
+		  --space-4:16px;
+		  --space-5:20px;
+		  --shadow:0 10px 30px rgba(0,0,0,.35);
+		  --border:1px solid rgba(255,255,255,.10);
+		}
+		
+		*{ box-sizing:border-box; }
+		html,body{ height:100%; scroll-behavior:smooth; }
+		
+		/* Tipografia fluida e contraste */
+		body{
+		  margin:0;
+		  font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+		  line-height:1.5;
+		  color:var(--text);
+		  background: linear-gradient(180deg, #0b0f14, #0f172a 50%, #0b0f14);
+		  -webkit-font-smoothing:antialiased;
+		  -moz-osx-font-smoothing:grayscale;
+		}
+		
+		h1{
+		  font-size:clamp(1.25rem, 2.5vw + .6rem, 1.8rem);
+		  margin:0 0 var(--space-2);
+		  letter-spacing:.2px;
+		}
+		.sub{ color:var(--muted); font-size:clamp(.9rem, .6vw + .7rem, .98rem); margin-bottom:var(--space-3); }
+		
+		/* =========================
+		   Layout Base
+		========================== */
+		.wrap{
+		  width:100%;
+		  max-width:980px;
+		  margin-inline:auto;
+		  padding: clamp(16px, 3vw, 24px);
+		}
+		
+		.card{
+		  background: rgba(17,24,39,.9);
+		  border:1px solid rgba(255,255,255,.06);
+		  border-radius:var(--radius);
+		  padding: clamp(14px, 2.2vw, 20px);
+		  box-shadow: var(--shadow);
+		  backdrop-filter: blur(6px);
+		}
+		@supports not (backdrop-filter: blur(6px)){
+		  .card{ background:#111827; } /* fallback */
+		}
+		
+		/* =========================
+		   Campos e Grids
+		========================== */
+		.idgrid{
+		  display:grid;
+		  gap:var(--space-2);
+		  grid-template-columns: 1fr; /* mobile-first */
+		  margin-bottom:var(--space-4);
+		}
+		@media (min-width:540px){
+		  .idgrid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+		}
+		@media (min-width:900px){
+		  .idgrid{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+		}
+		
+		.field{ display:flex; flex-direction:column; gap:var(--space-1); }
+		.field label{ font-size:.92rem; color:var(--muted); }
+		.field input, .field select{
+		  padding:12px;
+		  border-radius:var(--radius-sm);
+		  border:1px solid rgba(255,255,255,.14);
+		  background: rgba(255,255,255,.05);
+		  color:var(--text);
+		  min-height:44px; /* melhor tocabilidade */
+		}
+		.field input::placeholder, .field select::placeholder{ color:rgba(229,231,235,.65); }
+		
+		.help{ color:var(--muted); font-size:.92rem; margin-bottom:var(--space-2); }
+		
+		.grid{
+		  display:grid;
+		  gap:var(--space-4);
+		}
+		
+		.section{
+		  border:1px dashed rgba(255,255,255,.12);
+		  border-radius:12px;
+		  padding:var(--space-3);
+		}
+		.section h2{
+		  font-size:clamp(1rem, .7vw + .8rem,1.12rem);
+		  margin:0 0 var(--space-2);
+		}
+		
+		.item{
+		  padding: var(--space-3);
+		  border-radius: var(--radius-sm);
+		  border:1px solid rgba(255,255,255,.08);
+		  background: rgba(255,255,255,.02);
+		}
+		.item + .item{ margin-top:var(--space-2); }
+		.item.critical{ border-color: rgba(239,68,68,.35); }
+		
+		.item-label{ display:flex; gap:8px; align-items:flex-start; }
+		.item-label > strong{ white-space:nowrap; }
+		.pill{
+		  font-size:.75rem;
+		  padding:2px 8px;
+		  border-radius:999px;
+		  border:1px solid rgba(255,255,255,.12);
+		  color:var(--muted);
+		}
+		.pill.crit{ color:#fecaca; border-color:#fecaca; }
+		.pill.inv{ color:#bae6fd; border-color:#bae6fd; }
+		
+		/* Likert responsivo */
+		.likert{
+		  display:flex;
+		  gap:10px;
+		  margin-top:8px;
+		  flex-wrap:wrap;
+		}
+		.likert label{
+		  display:flex; align-items:center; gap:6px;
+		  padding:8px 12px;
+		  border-radius:999px;
+		  border:1px solid rgba(255,255,255,.15);
+		  cursor:pointer;
+		  min-height:40px;
+		}
+		.likert input{ accent-color: var(--accent); }
+		
+		/* =========================
+		   Ações / Botões
+		========================== */
+		.actions{
+		  display:flex;
+		  flex-wrap:wrap;
+		  gap:var(--space-2);
+		  margin-top:var(--space-4);
+		}
+		button, .btn{
+		  background:var(--accent);
+		  color:#041016;
+		  padding:12px 16px;
+		  border-radius:10px;
+		  border:none;
+		  font-weight:700;
+		  cursor:pointer;
+		  min-height:44px;
+		  width:100%;        /* mobile: largura total */
+		}
+		button.secondary{
+		  background:transparent;
+		  color:var(--text);
+		  border:1px solid rgba(255,255,255,.18);
+		}
+		@media (min-width:560px){
+		  button, .btn{ width:auto; }  /* em telas médias/grandes, botões lado a lado */
+		}
+		button:hover{ filter:brightness(1.05); }
+		button:active{ transform: translateY(1px); }
+		button:focus-visible{
+		  outline:2px solid var(--accent);
+		  outline-offset:2px;
+		}
+		
+		/* =========================
+		   Resultados / Badges
+		========================== */
+		.results{
+		  margin-top:var(--space-4);
+		  padding:var(--space-3);
+		  border-radius:12px;
+		  background: rgba(34,211,238,.06);
+		  border:1px solid rgba(34,211,238,.30);
+		}
+		.results h3{ margin:0 0 var(--space-2); }
+		
+		.kvs{
+		  display:grid;
+		  gap:var(--space-2);
+		  grid-template-columns: 1fr; /* mobile */
+		}
+		@media (min-width:520px){
+		  .kvs{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+		}
+		@media (min-width:820px){
+		  .kvs{ grid-template-columns: repeat(4, minmax(0,1fr)); }
+		}
+		.kv{
+		  padding:var(--space-2);
+		  border-radius:10px;
+		  border:1px solid rgba(255,255,255,.08);
+		  background: rgba(255,255,255,.02);
+		  text-wrap:balance;
+		}
+		.kv .label{ color:var(--muted); font-size:.85rem; }
+		.kv .value{ font-size:1.1rem; font-weight:700; }
+		
+		/* ajustes solicitados */
+		#ovVal{ font-weight:400; }              /* regras automáticas sem negrito */
+		#classVal{ text-align:center; }         /* classificação centralizada */
+		
+		.badge{ padding:2px 10px; border-radius:999px; font-weight:700; display:inline-block; }
+		.risk-none{ background:#064e3b; color:#a7f3d0; }
+		.risk-min { background:#1e3a8a; color:#bfdbfe; }
+		.risk-mod { background:#7c2d12; color:#fed7aa; }
+		.risk-high{ background:#7f1d1d; color:#fecaca; }
+		
+		/* =========================
+		   Details / Footer
+		========================== */
+		details{ border:var(--border); border-radius:10px; padding:10px; }
+		summary{ cursor:pointer; font-weight:600; }
+		.footer{
+		  margin-top:var(--space-4);
+		  color:var(--muted);
+		  font-size:.85rem;
+		  text-align:center; /* centralizado */
+		}
+		
+		/* =========================
+		   Acessibilidade e Preferências
+		========================== */
+		:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+		@media (prefers-reduced-motion: reduce){
+		  *{ animation:none!important; transition:none!important; }
+		}
+		
+		/* =========================
+		   Impressão
+		========================== */
+		@media print{
+		  body{ background:#fff; color:#000; }
+		  .card{ box-shadow:none; background:#fff; border:1px solid #ccc; }
+		  button, .actions{ display:none!important; }
+		  .item{ break-inside:avoid; }
+		  .field input, .field select{ border-color:#888; color:#000; }
+		}
+	</style>
 </head>
 
-</head>
-  <style>
-  /* =========================
-     Variáveis e Resets
-  ========================== */
-  :root{
-    --bg:#0b0f14;
-    --card:#111827;
-    --muted:#9ca3af;
-    --text:#e5e7eb;
-    --accent:#22d3ee;
-
-    --radius:16px;
-    --radius-sm:10px;
-    --space-1:6px;
-    --space-2:10px;
-    --space-3:14px;
-    --space-4:16px;
-    --space-5:20px;
-    --shadow:0 10px 30px rgba(0,0,0,.35);
-    --border:1px solid rgba(255,255,255,.10);
-  }
-
-  *{ box-sizing:border-box; }
-  html,body{ height:100%; }
-
-  /* Tipografia fluida e contraste */
-  body{
-    margin:0;
-    font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
-    line-height:1.5;
-    color:var(--text);
-    background: linear-gradient(180deg, #0b0f14, #0f172a 50%, #0b0f14);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-  }
-
-  h1{
-    font-size:clamp(1.25rem, 2.5vw + .6rem, 1.8rem);
-    margin:0 0 var(--space-2);
-    letter-spacing:.2px;
-  }
-  .sub{ color:var(--muted); font-size:clamp(.9rem, .6vw + .7rem, .98rem); margin-bottom:var(--space-3); }
-
-  /* =========================
-     Layout Base
-  ========================== */
-  .wrap{
-    width:100%;
-    max-width:980px;
-    margin-inline:auto;
-    padding: clamp(16px, 3vw, 24px);
-  }
-
-  .card{
-    background: rgba(17,24,39,.9);
-    border:1px solid rgba(255,255,255,.06);
-    border-radius:var(--radius);
-    padding: clamp(14px, 2.2vw, 20px);
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(6px);
-  }
-  @supports not (backdrop-filter: blur(6px)){
-    .card{ background:#111827; } /* fallback */
-  }
-
-  /* =========================
-     Campos e Grids
-  ========================== */
-  .idgrid{
-    display:grid;
-    gap:var(--space-2);
-    grid-template-columns: 1fr; /* mobile-first */
-    margin-bottom:var(--space-4);
-  }
-  @media (min-width:540px){
-    .idgrid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-  }
-  @media (min-width:900px){
-    .idgrid{ grid-template-columns: repeat(3, minmax(0,1fr)); }
-  }
-
-  .field{ display:flex; flex-direction:column; gap:var(--space-1); }
-  .field label{ font-size:.92rem; color:var(--muted); }
-  .field input, .field select{
-    padding:12px;
-    border-radius:var(--radius-sm);
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.05);
-    color:var(--text);
-    min-height:44px; /* melhor tocabilidade */
-  }
-  .field input::placeholder, .field select::placeholder{ color:rgba(229,231,235,.65); }
-
-  .help{ color:var(--muted); font-size:.92rem; margin-bottom:var(--space-2); }
-
-  .grid{
-    display:grid;
-    gap:var(--space-4);
-  }
-
-  .section{
-    border:1px dashed rgba(255,255,255,.12);
-    border-radius:12px;
-    padding:var(--space-3);
-  }
-  .section h2{
-    font-size:clamp(1rem, .7vw + .8rem,1.12rem);
-    margin:0 0 var(--space-2);
-  }
-
-  .item{
-    padding: var(--space-3);
-    border-radius: var(--radius-sm);
-    border:1px solid rgba(255,255,255,.08);
-    background: rgba(255,255,255,.02);
-  }
-  .item + .item{ margin-top:var(--space-2); }
-  .item.critical{ border-color: rgba(239,68,68,.35); }
-
-  .item-label{ display:flex; gap:8px; align-items:flex-start; }
-  .item-label > strong{ white-space:nowrap; }
-  .pill{
-    font-size:.75rem;
-    padding:2px 8px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.12);
-    color:var(--muted);
-  }
-  .pill.crit{ color:#fecaca; border-color:#fecaca; }
-  .pill.inv{ color:#bae6fd; border-color:#bae6fd; }
-
-  /* Likert responsivo */
-  .likert{
-    display:flex;
-    gap:10px;
-    margin-top:8px;
-    flex-wrap:wrap;
-  }
-  .likert label{
-    display:flex; align-items:center; gap:6px;
-    padding:8px 12px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.15);
-    cursor:pointer;
-    min-height:40px;
-  }
-  .likert input{ accent-color: var(--accent); }
-
-  /* =========================
-     Ações / Botões
-  ========================== */
-  .actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:var(--space-2);
-    margin-top:var(--space-4);
-  }
-  button, .btn{
-    background:var(--accent);
-    color:#041016;
-    padding:12px 16px;
-    border-radius:10px;
-    border:none;
-    font-weight:700;
-    cursor:pointer;
-    min-height:44px;
-    width:100%;        /* mobile: largura total */
-  }
-  button.secondary{
-    background:transparent;
-    color:var(--text);
-    border:1px solid rgba(255,255,255,.18);
-  }
-  @media (min-width:560px){
-    button, .btn{ width:auto; }  /* em telas médias/grandes, botões lado a lado */
-  }
-  button:hover{ filter:brightness(1.05); }
-  button:active{ transform: translateY(1px); }
-  button:focus-visible{
-    outline:2px solid var(--accent);
-    outline-offset:2px;
-  }
-
-  /* =========================
-     Resultados / Badges
-  ========================== */
-  .results{
-    margin-top:var(--space-4);
-    padding:var(--space-3);
-    border-radius:12px;
-    background: rgba(34,211,238,.06);
-    border:1px solid rgba(34,211,238,.30);
-  }
-  .results h3{ margin:0 0 var(--space-2); }
-
-  .kvs{
-    display:grid;
-    gap:var(--space-2);
-    grid-template-columns: 1fr; /* mobile */
-  }
-  @media (min-width:520px){
-    .kvs{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-  }
-  @media (min-width:820px){
-    .kvs{ grid-template-columns: repeat(4, minmax(0,1fr)); }
-  }
-  .kv{
-    padding:var(--space-2);
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,.08);
-    background: rgba(255,255,255,.02);
-    text-wrap:balance;
-  }
-  .kv .label{ color:var(--muted); font-size:.85rem; }
-  .kv .value{ font-size:1.1rem; font-weight:700; }
-
-  .badge{ padding:2px 10px; border-radius:999px; font-weight:700; display:inline-block; }
-  .risk-none{ background:#064e3b; color:#a7f3d0; }
-  .risk-min { background:#1e3a8a; color:#bfdbfe; }
-  .risk-mod { background:#7c2d12; color:#fed7aa; }
-  .risk-high{ background:#7f1d1d; color:#fecaca; }
-
-  /* =========================
-     Details / Footer
-  ========================== */
-  details{ border:var(--border); border-radius:10px; padding:10px; }
-  summary{ cursor:pointer; font-weight:600; }
-  .footer{
-    margin-top:var(--space-4);
-    color:var(--muted);
-    font-size:.85rem;
-    text-align:center; /* centralizado */
-  }
-
-  /* =========================
-     Acessibilidade e Preferências
-  ========================== */
-  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
-  @media (prefers-reduced-motion: reduce){
-    *{ animation:none!important; transition:none!important; }
-  }
-
-  /* =========================
-     Impressão
-  ========================== */
-  @media print{
-    body{ background:#fff; color:#000; }
-    .card{ box-shadow:none; background:#fff; border:1px solid #ccc; }
-    button, .actions{ display:none!important; }
-    .item{ break-inside:avoid; }
-    .field input, .field select{ border-color:#888; color:#000; }
-  }
-</style>
-
-</head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>EIR-RS – Escala Integrada de Risco de Suicídio (Triagem)</h1>
-
-      <div class="idgrid" aria-label="Identificação do paciente">
-        <div class="field"><label for="paciente">Nome completo do paciente</label><input id="paciente" name="paciente" placeholder="Ex.: João da Silva" required></div>
-        <div class="field"><label for="idade">Idade</label><input id="idade" name="idade" type="number" min="5" max="120" placeholder="Ex.: 34"></div>
-        <div class="field"><label for="data">Data do rastreio</label><input id="data" name="data" type="date"></div>
-        <div class="field"><label for="contato">Contato de emergência (nome/telefone)</label><input id="contato" name="contato" placeholder="Ex.: Maria, (31) 9xxxx-xxxx"></div>
-        <div class="field"><label for="responsavel">Profissional responsável</label><input id="responsavel" name="responsavel" placeholder="Seu nome/registro"></div>
-        <div class="field"><label for="obs">Observações relevantes</label><input id="obs" name="obs" placeholder="Ex.: diagnóstico principal, medicação, gatilhos"></div>
-      </div>
-
-      <div class="sub">Janela temporal: <strong>últimos 14 dias</strong> (itens de histórico indicados). &nbsp;|&nbsp; Respostas: 0= Nunca · 1= Raramente · 2= Às vezes · 3= Frequentemente · 4= Quase sempre</div>
-      <p class="help"><strong>Instrução ao paciente:</strong> “Pense nas últimas duas semanas e marque a opção que melhor descreve o que você sentiu ou fez. Nos itens de histórico, responda considerando toda a sua vida.”</p>
-
-      <form id="eirForm" aria-describedby="desc">
-        <div class="grid"></div>
-        <div class="actions">
-          <button type="button" id="calcBtn">Calcular escore</button>
-          <button type="button" class="secondary" id="clearBtn">Limpar respostas</button>
-          <button type="button" class="secondary" id="printBtn">Imprimir / PDF</button>
-        </div>
-      </form>
-
-      <div id="results" class="results" hidden>
-        <h3>Resultado</h3>
-        <div class="kvs">
-          <div class="kv"><div class="label">Índice de Risco (IR) / máx. 82</div><div id="irVal" class="value">—</div></div>
-          <div class="kv"><div class="label">Classificação</div><div id="classVal" class="value">—</div></div>
-          <div class="kv"><div class="label">Regras automáticas que aumentam a classificação (sinais de alerta)</div><div id="ovVal" class="value">—</div></div>
-          <div class="kv"><div class="label">Itens sem resposta</div><div id="missVal" class="value">—</div></div>
-        </div>
-        <details style="margin-top:12px;">
-          <summary>Notas essenciais e modificadores por condição</summary>
-          <div id="notesText" style="margin-top:8px; line-height:1.55"></div>
-        </details>
-        <details id="extraDetails" style="margin-top:12px;" hidden>
-          <summary>Extra – FRAMES (o que é e como aplicar)</summary>
-          <div id="extraText" style="margin-top:8px; line-height:1.55"></div>
-        </details>
-        <details style="margin-top:12px;">
-          <summary>Plano de Segurança e Conduta</summary>
-          <div id="planText" style="margin-top:8px; line-height:1.55"></div>
-        </details>
-        <details style="margin-top:12px;">
-          <summary>Recursos 24h</summary>
-          <ul id="resources" style="margin:8px 0 0 18px; line-height:1.5">
-            <li>CVV – 188 (telefone/24h) e chat em <em>cvv.org.br</em></li>
-            <li>SAMU – 192 (emergências médicas)</li>
-            <li>Polícia Militar – 190 (risco imediato de violência)</li>
-            <li>Corpo de Bombeiros Militar – 193 (emergências e resgates)</li>
-            <li>UPA/Hospital de referência psiquiátrica local / CAPS AD (Álcool e Drogas)</li>
-          </ul>
-        </details>
-      </div>
-
-      <div class="footer">
-        <p><strong>Notas:</strong> Itens críticos (peso 1,5): A3, B3, B4, C2, D3. Protetores (F1, F2) têm escore invertido. Regras automáticas que aumentam a classificação: qualquer crítico = 4 ou D2 ≥ 3 → classificar como <em>Risco Grave</em>; se C1 ≥ 3 e B3 ≥ 2 → elevar um nível. Válido com até 2 itens faltantes e nenhum crítico faltante (aplica-se <em>proration</em> ponderado); caso contrário, inválido.</p>
-        <p style="margin-top:8px; opacity:.9">Richelmy Murta — Psicólogo Clínico, Especialista em Terapia Cognitivo-Comportamental</p>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // ------------------ Definição do instrumento ------------------
-    const weights = { default: 1.0, critical: 1.5 };
-    const thresholds = [
-      { label: 'Sem risco', min: 0, max: 9, css: 'risk-none' },
-      { label: 'Risco mínimo', min: 10, max: 22, css: 'risk-min' },
-      { label: 'Risco moderado', min: 23, max: 42, css: 'risk-mod' },
-      { label: 'Risco grave', min: 43, max: Infinity, css: 'risk-high' },
-    ];
-
-    const sections = [
-      { code: 'A', title: 'Seção A – Ideação', help: 'Últimos 14 dias' },
-      { code: 'B', title: 'Seção B – Intenção/Plano', help: 'Últimos 14 dias' },
-      { code: 'C', title: 'Seção C – Meios/Acesso', help: 'Últimos 14 dias' },
-      { code: 'D', title: 'Seção D – Histórico e Comportamento', help: 'D1: vida; D2: últimos 12 meses; D3: últimos 14 dias' },
-      { code: 'E', title: 'Seção E – Moduladores Agudos', help: 'Últimos 14 dias' },
-      { code: 'F', title: 'Seção F – Fatores Protetores (pontuação invertida)', help: 'Últimos 14 dias' },
-    ];
-
-    const items = [
-      // A – Ideação
-      { id: 'A1', section: 'A', text: 'Pensei que a vida não valia a pena continuar.', critical: false, invert: false },
-      { id: 'A2', section: 'A', text: 'Tive pensamentos de que seria melhor morrer.', critical: false, invert: false },
-      { id: 'A3', section: 'A', text: 'Pensei em uma forma específica de me matar.', critical: true, invert: false },
-      { id: 'A4', section: 'A', text: 'A ideia de morrer trouxe sensação de alívio ou paz.', critical: false, invert: false },
-      // B – Intenção
-      { id: 'B1', section: 'B', text: 'Senti vontade de agir contra a minha vida.', critical: false, invert: false },
-      { id: 'B2', section: 'B', text: 'Reservei tempo para pensar seriamente em me matar.', critical: false, invert: false },
-      { id: 'B3', section: 'B', text: 'Decidi quando e onde faria.', critical: true, invert: false },
-      { id: 'B4', section: 'B', text: 'Senti que não conseguiria me controlar se tivesse a oportunidade.', critical: true, invert: false },
-      // C – Meios
-      { id: 'C1', section: 'C', text: 'Tive acesso fácil a meios potencialmente letais.', critical: false, invert: false },
-      { id: 'C2', section: 'C', text: 'Preparei ou aproximei meios (separar comprimidos, verificar locais, carregar arma).', critical: true, invert: false },
-      // D – Histórico e comportamento
-      { id: 'D1', section: 'D', text: '(Histórico) Já tentei suicídio alguma vez na vida.', critical: false, invert: false },
-      { id: 'D2', section: 'D', text: '(Histórico recente) Tive tentativa, gesto ou preparação nos últimos 12 meses.', critical: false, invert: false },
-      { id: 'D3', section: 'D', text: 'Realizei comportamento preparatório nas últimas 2 semanas (cartas, despedidas, entregar bens, “testes”).', critical: true, invert: false },
-      // E – Moduladores
-      { id: 'E1', section: 'E', text: 'Desesperança intensa (“nada vai melhorar”).', critical: false, invert: false },
-      { id: 'E2', section: 'E', text: 'Uso problemático de álcool/drogas ou intoxicação recente.', critical: false, invert: false },
-      { id: 'E3', section: 'E', text: 'Agitação/impulsividade marcante, ou sintomas psicóticos/dissociativos.', critical: false, invert: false },
-      // F – Protetores (invert)
-      { id: 'F1', section: 'F', text: 'Senti forte motivo para viver (filhos, fé, projetos, responsabilidades).', critical: false, invert: true },
-      { id: 'F2', section: 'F', text: 'Busquei e usei ativamente apoio (familiares, amigos, tratamento, recursos).', critical: false, invert: true },
-    ];
-
-    // ------------------ Renderização ------------------
-    const grid = document.querySelector('.grid');
-    function render() {
-      sections.forEach(sec => {
-        const secEl = document.createElement('section');
-        secEl.className = 'section';
-        secEl.innerHTML = `<h2>${sec.title}</h2><div class="help">${sec.help}</div>`;
-
-        items.filter(i => i.section === sec.code).forEach(it => {
-          const itemEl = document.createElement('div');
-          itemEl.className = 'item' + (it.critical ? ' critical' : '');
-          const pills = [];
-          if (it.critical) pills.push('<span class="pill crit" title="Item crítico (peso 1,5)">crítico</span>');
-          if (it.invert) pills.push('<span class="pill inv" title="Pontuação invertida (4 − resposta)">invertido</span>');
-
-          itemEl.innerHTML = `
-            <div class="item-label">
-              <strong>${it.id}.</strong>
-              <div>${it.text}</div>
-              <div style="flex:1"></div>
-              ${pills.join(' ')}
-            </div>
-            <div class="likert" role="radiogroup" aria-label="${it.id}">
-              ${[0,1,2,3,4].map(v => `
-                <label>
-                  <input type="radio" name="${it.id}" value="${v}" aria-label="${v}">
-                  <span>${v}</span>
-                </label>
-              `).join('')}
-            </div>
-          `;
-          secEl.appendChild(itemEl);
-        });
-
-        grid.appendChild(secEl);
-      });
-    }
-    render();
-
-    // ------------------ Utilitários ------------------
-    function getResponses() { const resp = {}; items.forEach(it => { const sel = document.querySelector(`input[name="${it.id}"]:checked`); resp[it.id] = sel ? Number(sel.value) : null; }); return resp; }
-    function classify(ir) { return thresholds.find(t => ir >= t.min && ir <= t.max); }
-    function elevateLevel(label) { const order = ['Sem risco', 'Risco mínimo', 'Risco moderado', 'Risco grave']; const idx = Math.min(order.indexOf(label) + 1, order.length - 1); return order[idx]; }
-
-    // ------------------ Notas por nível ------------------
-    function notesFor(label){
-      const map={
-        'Sem risco':[ 'Documente fatores protetores e ausência de pensamento suicida ativo/planejamento.', 'Defina sinais de alerta a monitorar e combine reaplicação do instrumento em mudanças clínicas.', 'Mantenha confidencialidade padrão e informe limites de forma breve.' ],
-        'Risco mínimo':[ 'Registre pensamento suicida (incluindo ideias mais passivas de morrer) e contexto. Especifique ausência de plano/meios.', 'Explique limites de confidencialidade e combine check-in breve entre sessões se necessário.', 'Planeje restrição preventiva de meios com passos concretos e responsáveis.' ],
-        'Risco moderado':[ 'Registre citações curtas do paciente entre aspas sobre pensamento/intenções/planos e meios; descreva fatores precipitantes.', 'Registre consentimentos, contatos ativados e justificativa técnica para conduta/encaminhamentos.', 'Defina acompanhamento em 48–72h e responsabilidades de cada membro da rede.' ],
-        'Risco grave':[ 'Registre avaliação de iminência: plano detalhado, intenção, acesso a meios e ausência de proteção.', 'Documente decisão de acionar urgência/internação e a justificativa clínica, incluindo comunicação de limites de confidencialidade.', 'Descreva ações de contenção e quem ficará responsável pela supervisão até o acolhimento.' ]
-      };
-      const items=(map[label]||[]).map(li=>`<li>${li}</li>`).join('');
-      return `<h4 style="margin:.2rem 0 .4rem">Notas essenciais (${label})</h4><ol>${items}</ol>`;
-    }
-
-    // ------------------ Modificadores por condição (ajustados ao risco) ------------------
-    function modifiersFor(label){
-      const block=(title,lines)=>`<div style="margin:.6rem 0"><strong>${title}:</strong><ul style="margin:.3rem 0 0 1rem">${lines.map(l=>`<li>${l}</li>`).join('')}</ul></div>`;
-      const byLevel={
-        'Sem risco':{
-          'Transtornos do humor':[ 'Psicoeducação; ativação comportamental leve (agenda simples de atividades prazerosas e de domínio).', 'Monitorar desesperança e pensamento suicida (incluindo ideias mais passivas de morrer).' ],
-          'Uso de substâncias':[ 'FRAMES para redução de risco; mapa de gatilhos; evitar decisões sob efeito.' ],
-          'Personalidade/Desregulação/Impulsividade':[ 'Habilidades básicas (tolerância ao estresse, mindfulness breve).', 'Contrato claro de sessão e metas de segurança.' ],
-          'Psicóticos':[ 'Rastreamento de sintomas; orientar busca precoce se alucinações/delírios se intensificarem.' ]
-        },
-        'Risco mínimo':{
-          'Transtornos do humor':[ 'Ativação comportamental estruturada (agenda de atividades prazerosas e de domínio, metas SMART, registro diário); avaliar necessidade de avaliação psiquiátrica.', 'Checar adesão medicamentosa (se houver); monitorar desesperança.' ],
-          'Uso de substâncias':[ 'FRAMES focado em redução/abstinência; estratégias para craving (atraso 20 min, evitar gatilhos, plano de substituição).', 'Considerar CAPS AD (Álcool e Drogas) conforme gravidade.' ],
-          'Personalidade/Desregulação/Impulsividade':[ 'Treino de habilidades (técnica STOP, aterramento 5-4-3-2-1).', 'Planejar manejo de crises entre sessões (ligação curta pactuada).' ],
-          'Psicóticos':[ 'Se sintomas ativos leves: contato com psiquiatria; orientar familiar sobre sinais de alerta.' ]
-        },
-        'Risco moderado':{
-          'Transtornos do humor':[ 'Avaliação psiquiátrica priorizada; possível ajuste farmacológico.', 'Ativação comportamental estruturada (agenda de atividades, metas SMART, monitoramento diário); apoio familiar.' ],
-          'Uso de substâncias':[ 'Risco de recaída/impulsividade: considerar desintoxicação supervisionada; envolver CAPS AD (Álcool e Drogas).', 'Plano claro de sobriedade para 72h (lista de atividades substitutivas, evitar gatilhos e pares de uso, contatos de suporte, locais seguros, plano hora-a-hora).' ],
-          'Personalidade/Desregulação/Impulsividade':[ 'Plano de Habilidades TDC (Terapia Dialética Comportamental) focal: tolerância ao estresse, regulação emocional, eficácia interpessoal.', 'Definir limites e plano de contato entre sessões; prevenir rupturas terapêuticas.' ],
-          'Psicóticos':[ 'Se comando alucinatório ou delírio de culpa/periculosidade: avaliação urgente; otimização antipsicótica.', 'Envolver família; reduzir estímulos; checar adesão.' ]
-        },
-        'Risco grave':{
-          'Transtornos do humor':[ 'Urgência psiquiátrica; avaliar internação; segurança 24–48h.', 'Suspender disponibilidade de meios; supervisão familiar contínua até acolhimento.' ],
-          'Uso de substâncias':[ 'Alta letalidade sob intoxicação: não atender sozinho; acionar rede/serviços 24h.', 'Considerar internação/UPA para manejo de intoxicação/abstinência complicada.' ],
-          'Personalidade/Desregulação/Impulsividade':[ 'Risco iminente: foco em segurança e contenção; evitar interpretações; comunicação clara e validante.', 'Transferência para serviço de crise quando aplicável.' ],
-          'Psicóticos':[ 'Risco com sintomas de comando: internação/observação; não confrontar delírios; garantir adesão medicamentosa.' ]
-        }
-      };
-      const section=byLevel[label]||{}; let html='<h4 style="margin:.8rem 0 .4rem">Modificadores por condição clínica (ajustados ao risco)</h4>';
-      Object.entries(section).forEach(([k,v])=>{ html+=block(k,v); });
-      return html;
-    }
-
-    // ------------------ Condutas por nível + Plano de Segurança ------------------
-    function planFor(label, resp){
-      const baseFRAMES = [
-        '<strong>Intervenção breve – FRAMES (explicado):</strong>',
-        'F: <em>Feedback</em> objetivo (devolutiva do risco e relação com sintomas).',
-        'R: <em>Responsabilidade</em> pessoal na decisão de seguir o plano.',
-        'A: <em>Aconselhamento</em> claro para reduzir risco (restrição de meios, adesão ao cuidado).',
-        'M: <em>Menu</em> de opções (estratégias internas, contatos, serviços).',
-        'E: <em>Empatia</em> consistente e não julgadora.',
-        'S: <em>Autoeficácia</em>: reforçar capacidades, sucessos prévios e pequenos passos.'
-      ].join('<br>');
-
-      const planoSeguranca = [
-        '<strong>Plano de Segurança (6 passos):</strong>',
-        '1) <em>Sinais de alerta pessoais</em>: pensamentos/emoções/situações que precedem crise.',
-        '2) <em>Estratégias internas</em>: respiração 4-6; aterramento 5-4-3-2-1; relaxamento; desescalada verbal consigo.',
-        '3) <em>Lugares e pessoas que ajudam</em>: locais públicos seguros; companhia disponível.',
-        '4) <em>Contatos para pedir ajuda</em>: 2–3 pessoas + telefones; frases prontas.',
-        '5) <em>Profissionais/serviços</em>: terapeuta/psiquiatra; CAPS AD (Álcool e Drogas)/UPA; CVV 188; SAMU 192; PM 190; CBM 193.',
-        '6) <em>Restrição de meios</em>: retirar/guardar meios letais; supervisionar medicamentos; limitar acesso a locais de risco.'
-      ].join('<br>');
-
-      const blocos = {
-        'Sem risco': {
-          cond: [
-            'Psicoeducação sobre pensamento suicida (incluindo ideias mais passivas de morrer) x pensamento suicida ativo e sinais de alerta pessoais.',
-            'Fortalecer fatores protetores (rotina, sono, rede, sentido de vida).',
-            'FRAMES breve como educação motivacional.',
-            'Agendar retorno regular; reaplicar instrumento se houver mudança clínica.'
-          ],
-          anex: []
-        },
-        'Risco mínimo': {
-          cond: [
-            'Aplicar FRAMES; alinhar expectativa terapêutica e <em>check-in</em> breve entre sessões conforme necessidade.',
-            'Revisar e, se indicado, iniciar Plano de Segurança <em>apenas se</em> houver pensamento suicida ativo (qualquer A≥1) ou acesso a meios (C1≥2).',
-            'Combinar restrição preventiva de meios (organizar medicamentos, chaves, supervisão).',
-            'Retorno em 1–2 semanas.'
-          ],
-          anex: []
-        },
-        'Risco moderado': {
-          cond: [
-            'Elaborar Plano de Segurança estruturado; entregar cópia ao paciente.',
-            'Envolver rede de apoio com consentimento; definir papéis e contatos.',
-            'Avaliação psiquiátrica e possível ajuste farmacológico.',
-            'Follow-up em 48–72h; contato intermediário pactuado.'
-          ],
-          anex: [planoSeguranca, baseFRAMES]
-        },
-        'Risco grave': {
-          cond: [
-            'Encaminhamento emergencial (UPA/serviço de crise); considerar internação conforme risco iminente.',
-            'Supervisão contínua até transferência para serviço; acionar rede e serviços 24h.',
-            'Restringir imediatamente meios letais; avaliar segurança do ambiente domiciliar.'
-          ],
-          anex: [planoSeguranca]
-        }
-      };
-
-      const ideacaoAtiva = ['A1','A2','A3','A4'].some(k => resp && resp[k] !== null && resp[k] >= 1);
-      const acessoMeios = resp && resp['C1'] !== null && resp['C1'] >= 2;
-
-      const bloco = blocos[label];
-      const extra = (label==='Risco mínimo' && (ideacaoAtiva || acessoMeios)) ? [planoSeguranca] : [];
-
-      const condHTML = `<p><strong>Conduta sugerida:</strong></p><ol>${bloco.cond.map(c=>`<li>${c}</li>`).join('')}</ol>`;
-      const anexHTML = [...(bloco.anex||[]), ...extra].length ? `<p>${[...(bloco.anex||[]), ...extra].join('<br><br>')}</p>` : '';
-      return condHTML + anexHTML;
-    }
-
-    function framesExtra(){
-      return [
-        '<p><strong>FRAMES</strong> é uma intervenção breve motivacional que organiza sua devolutiva e engajamento em seis passos:</p>',
-        '<ol>',
-        '<li><strong>F – Feedback</strong>: devolva dados objetivos (EIR-RS, sintomas, eventos) e a relação com o risco.</li>',
-        '<li><strong>R – Responsabilidade</strong>: destaque que a decisão e as ações são do paciente; você oferece apoio e estrutura.</li>',
-        '<li><strong>A – Aconselhamento</strong>: recomendações claras e específicas (ex.: restringir meios, manter rotinas, seguir plano).</li>',
-        '<li><strong>M – Menu de opções</strong>: co-crie alternativas (estratégias internas, pessoas de apoio, serviços 24h).</li>',
-        '<li><strong>E – Empatia</strong>: postura validante e não julgadora.</li>',
-        '<li><strong>S – Autoeficácia</strong>: reforço de capacidades, lembrar sucessos prévios e definir pequenos passos viáveis.</li>',
-        '</ol>',
-        '<p><em>Dica prática:</em> use linguagem simples, escreva 1–3 ações concretas para a próxima semana e combine como será monitorado.</p>'
-      ].join('');
-    }
-
-    // ------------------ Cálculo principal ------------------
-    function compute() {
-      const resp = getResponses();
-      const missing = Object.values(resp).filter(v => v === null).length;
-      const criticalMissing = items.some(it => it.critical && resp[it.id] === null);
-
-      let answeredWeight = 0, weightedSum = 0;
-      items.forEach(it => {
-        let v = resp[it.id];
-        if (v !== null) {
-          if (it.invert) v = 4 - v;
-          const w = it.critical ? weights.critical : weights.default;
-          answeredWeight += w;
-          weightedSum += v * w;
-        }
-      });
-
-      const anyCritical4 = items.some(it => it.critical && resp[it.id] === 4);
-      const d2High = resp['D2'] !== null && resp['D2'] >= 3;
-      const c1High = resp['C1'] !== null && resp['C1'] >= 3;
-      const b3Mid = resp['B3'] !== null && resp['B3'] >= 2;
-
-      const ovFlags = [];
-      if (anyCritical4) ovFlags.push('Crítico=4');
-      if (d2High) ovFlags.push('D2≥3');
-      if (c1High && b3Mid) ovFlags.push('C1≥3 & B3≥2');
-
-      const totalW = items.reduce((acc, it) => acc + (it.critical ? weights.critical : weights.default), 0);
-      let IR, validityNote = '';
-      if (missing === 0) { IR = weightedSum; validityNote = 'Completo'; }
-      else if (missing <= 2 && !criticalMissing) { const mean = weightedSum / answeredWeight; IR = mean * totalW; validityNote = `Proration aplicado (faltantes: ${missing})`; }
-      else { return { invalid: true, reason: `Escala inválida: ${missing} faltantes${criticalMissing ? ', incluindo item crítico' : ''}.` }; }
-
-      let cls = classify(IR);
-      if (anyCritical4 || d2High) { cls = thresholds[3]; }
-      else if (c1High && b3Mid) { const elevated = elevateLevel(cls.label); cls = thresholds.find(t => t.label === elevated) || thresholds[3]; }
-
-      return { IR: Math.round(IR * 10) / 10, classLabel: cls.label, classCss: cls.css, overrides: ovFlags.length ? ovFlags.join(', ') : 'Nenhum', missing, validityNote, resp };
-    }
-
-    function mapOverrides(txt){
-      if(!txt || txt==='Nenhum') return 'Nenhum';
-      return txt
-        .replaceAll('Crítico=4','Algum item crítico marcado como 4 (eleva automaticamente para Risco Grave)')
-        .replaceAll('D2≥3','Tentativa/gesto nos últimos 12 meses com intensidade alta (D2 ≥ 3)')
-        .replaceAll('C1≥3 & B3≥2','Acesso alto a meios (C1 ≥ 3) combinado com decisão de quando/onde (B3 ≥ 2)');
-    }
-
-    // ------------------ UI ------------------
-    const calcBtn = document.getElementById('calcBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const printBtn = document.getElementById('printBtn');
-
-    calcBtn.addEventListener('click', () => {
-      const out = compute();
-      const res = document.getElementById('results');
-      if (out.invalid) {
-        res.hidden = false;
-        document.getElementById('irVal').textContent = 'Inválido';
-        document.getElementById('classVal').innerHTML = '<span class="badge risk-high">Reaplicar/entrevista</span>';
-        document.getElementById('ovVal').textContent = '—';
-        document.getElementById('missVal').textContent = out.reason;
-        document.getElementById('planText').innerHTML = '<p>Entrevista clínica imediata. Não tomar decisões apenas pelo instrumento.</p>';
-        document.getElementById('notesText').innerHTML = '—';
-        document.getElementById('extraDetails').hidden = true;
-        document.getElementById('extraText').innerHTML = '';
-        return;
-      }
-
-      res.hidden = false;
-      document.getElementById('irVal').textContent = `${out.IR} / 82`;
-      document.getElementById('classVal').innerHTML = `<span class="badge ${out.classCss}">${out.classLabel}</span>`;
-      document.getElementById('ovVal').textContent = mapOverrides(out.overrides);
-      document.getElementById('missVal').textContent = `${out.missing} (${out.validityNote})`;
-
-      document.getElementById('planText').innerHTML = planFor(out.classLabel, out.resp);
-      document.getElementById('notesText').innerHTML = notesFor(out.classLabel) + modifiersFor(out.classLabel);
-
-      const extra = document.getElementById('extraDetails');
-      const needsFRAMES = ['Sem risco','Risco mínimo','Risco moderado'].includes(out.classLabel);
-      if(needsFRAMES){ extra.hidden = false; document.getElementById('extraText').innerHTML = framesExtra(); }
-      else { extra.hidden = true; document.getElementById('extraText').innerHTML = ''; }
-    });
-
-    clearBtn.addEventListener('click', () => {
-      document.getElementById('eirForm').reset();
-      document.getElementById('results').hidden = true;
-      document.getElementById('extraDetails').hidden = true;
-      document.getElementById('extraText').innerHTML = '';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    printBtn.addEventListener('click', () => window.print());
-  </script>
+	<div class="wrap">
+		<div class="card">
+			<h1>EIR-RS – Escala Integrada de Risco de Suicídio (Triagem)</h1>
+			<div class="idgrid" aria-label="Identificação do paciente">
+				<div class="field"><label for="paciente">Nome completo do paciente</label><input id="paciente" name="paciente" placeholder="Ex.: João da Silva" required></div>
+				<div class="field"><label for="idade">Idade</label><input id="idade" name="idade" type="number" min="5" max="120" placeholder="Ex.: 34"></div>
+				<div class="field"><label for="data">Data do rastreio</label><input id="data" name="data" type="date"></div>
+				<div class="field"><label for="contato">Contato de emergência (nome/telefone)</label><input id="contato" name="contato" placeholder="Ex.: Maria, (31) 9xxxx-xxxx"></div>
+				<div class="field"><label for="responsavel">Profissional responsável</label><input id="responsavel" name="responsavel" placeholder="Seu nome/registro"></div>
+				<div class="field"><label for="obs">Observações relevantes</label><input id="obs" name="obs" placeholder="Ex.: diagnóstico principal, medicação, gatilhos"></div>
+			</div>
+			<div class="sub">Janela temporal: <strong>últimos 14 dias</strong> (itens de histórico indicados). &nbsp;|&nbsp; Respostas: 0= Nunca · 1= Raramente · 2= Às vezes · 3= Frequentemente · 4= Quase sempre</div>
+			<p class="help"><strong>Instrução ao paciente:</strong> “Pense nas últimas duas semanas e marque a opção que melhor descreve o que você sentiu ou fez. Nos itens de histórico, responda considerando toda a sua vida.”</p>
+			<form id="eirForm" aria-describedby="desc">
+				<div class="grid"></div>
+				<div class="actions">
+					<button type="button" id="calcBtn">Calcular escore</button>
+					<button type="button" class="secondary" id="clearBtn">Limpar respostas</button>
+					<button type="button" class="secondary" id="printBtn">Imprimir / PDF</button>
+				</div>
+			</form>
+			<div id="results" class="results" hidden>
+				<h3>Resultado</h3>
+				<div class="kvs">
+					<div class="kv">
+						<div class="label">Índice de Risco (IR) / máx. 82</div>
+						<div id="irVal" class="value">—</div>
+					</div>
+					<div class="kv">
+						<div class="label">Classificação</div>
+						<div id="classVal" class="value">—</div>
+					</div>
+					<div class="kv">
+						<div class="label">Regras automáticas que aumentam a classificação (sinais de alerta)</div>
+						<div id="ovVal" class="value">—</div>
+					</div>
+					<div class="kv">
+						<div class="label">Itens sem resposta</div>
+						<div id="missVal" class="value">—</div>
+					</div>
+				</div>
+				<details id="notesDetails" style="margin-top:12px;">
+					<summary>Notas essenciais e modificadores por condição <span style="opacity:.8">(toque/clique para abrir)</span></summary>
+					<div id="notesText" style="margin-top:8px; line-height:1.55"></div>
+				</details>
+				<details id="extraDetails" style="margin-top:12px;" hidden>
+					<summary>Extra – FRAMES (o que é e como aplicar) <span style="opacity:.8">(toque/clique para abrir)</span></summary>
+					<div id="extraText" style="margin-top:8px; line-height:1.55"></div>
+				</details>
+				<details id="planDetails" style="margin-top:12px;">
+					<summary>Plano de Segurança e Conduta <span style="opacity:.8">(toque/clique para abrir)</span></summary>
+					<div id="planText" style="margin-top:8px; line-height:1.55"></div>
+				</details>
+				<details id="resourcesDetails" style="margin-top:12px;">
+					<summary>Recursos 24h <span style="opacity:.8">(toque/clique para abrir)</span></summary>
+					<ul id="resources" style="margin:8px 0 0 18px; line-height:1.5">
+						<li>CVV – 188 (telefone/24h) e chat em <em>cvv.org.br</em></li>
+						<li>SAMU – 192 (emergências médicas)</li>
+						<li>Polícia Militar – 190 (risco imediato de violência)</li>
+						<li>Corpo de Bombeiros Militar – 193 (emergências e resgates)</li>
+						<li>UPA/Hospital de referência psiquiátrica local / CAPS AD (Álcool e Drogas)</li>
+					</ul>
+				</details>
+			</div>
+			<div class="footer">
+				<p><strong>Notas:</strong> Itens críticos (peso 1,5): A3, B3, B4, C2, D3. Protetores (F1, F2) têm escore invertido. Regras automáticas que aumentam a classificação: qualquer crítico = 4 ou D2 ≥ 3 → classificar como <em>Risco Grave</em>; se C1 ≥ 3 e B3 ≥ 2 → elevar um nível. Válido com até 2 itens faltantes e nenhum crítico faltante (aplica-se <em>proration</em> ponderado); caso contrário, inválido.</p>
+				<p style="margin-top:8px; opacity:.9">Richelmy Murta — Psicólogo Clínico, Especialista em Terapia Cognitivo-Comportamental</p>
+			</div>
+		</div>
+	</div>
+	<script>
+		// ------------------ Definição do instrumento ------------------
+		const weights = { default: 1.0, critical: 1.5 };
+		const thresholds = [
+		  { label: 'Sem risco', min: 0, max: 9, css: 'risk-none' },
+		  { label: 'Risco mínimo', min: 10, max: 22, css: 'risk-min' },
+		  { label: 'Risco moderado', min: 23, max: 42, css: 'risk-mod' },
+		  { label: 'Risco grave', min: 43, max: Infinity, css: 'risk-high' },
+		];
+		
+		const sections = [
+		  { code: 'A', title: 'Seção A – Ideação', help: 'Últimos 14 dias' },
+		  { code: 'B', title: 'Seção B – Intenção/Plano', help: 'Últimos 14 dias' },
+		  { code: 'C', title: 'Seção C – Meios/Acesso', help: 'Últimos 14 dias' },
+		  { code: 'D', title: 'Seção D – Histórico e Comportamento', help: 'D1: vida; D2: últimos 12 meses; D3: últimos 14 dias' },
+		  { code: 'E', title: 'Seção E – Moduladores Agudos', help: 'Últimos 14 dias' },
+		  { code: 'F', title: 'Seção F – Fatores Protetores (pontuação invertida)', help: 'Últimos 14 dias' },
+		];
+		
+		const items = [
+		  // A – Ideação
+		  { id: 'A1', section: 'A', text: 'Pensei que a vida não valia a pena continuar.', critical: false, invert: false },
+		  { id: 'A2', section: 'A', text: 'Tive pensamentos de que seria melhor morrer.', critical: false, invert: false },
+		  { id: 'A3', section: 'A', text: 'Pensei em uma forma específica de me matar.', critical: true, invert: false },
+		  { id: 'A4', section: 'A', text: 'A ideia de morrer trouxe sensação de alívio ou paz.', critical: false, invert: false },
+		  // B – Intenção
+		  { id: 'B1', section: 'B', text: 'Senti vontade de agir contra a minha vida.', critical: false, invert: false },
+		  { id: 'B2', section: 'B', text: 'Reservei tempo para pensar seriamente em me matar.', critical: false, invert: false },
+		  { id: 'B3', section: 'B', text: 'Decidi quando e onde faria.', critical: true, invert: false },
+		  { id: 'B4', section: 'B', text: 'Senti que não conseguiria me controlar se tivesse a oportunidade.', critical: true, invert: false },
+		  // C – Meios
+		  { id: 'C1', section: 'C', text: 'Tive acesso fácil a meios potencialmente letais.', critical: false, invert: false },
+		  { id: 'C2', section: 'C', text: 'Preparei ou aproximei meios (separar comprimidos, verificar locais, carregar arma).', critical: true, invert: false },
+		  // D – Histórico e comportamento
+		  { id: 'D1', section: 'D', text: '(Histórico) Já tentei suicídio alguma vez na vida.', critical: false, invert: false },
+		  { id: 'D2', section: 'D', text: '(Histórico recente) Tive tentativa, gesto ou preparação nos últimos 12 meses.', critical: false, invert: false },
+		  { id: 'D3', section: 'D', text: 'Realizei comportamento preparatório nas últimas 2 semanas (cartas, despedidas, entregar bens, “testes”).', critical: true, invert: false },
+		  // E – Moduladores
+		  { id: 'E1', section: 'E', text: 'Desesperança intensa (“nada vai melhorar”).', critical: false, invert: false },
+		  { id: 'E2', section: 'E', text: 'Uso problemático de álcool/drogas ou intoxicação recente.', critical: false, invert: false },
+		  { id: 'E3', section: 'E', text: 'Agitação/impulsividade marcante, ou sintomas psicóticos/dissociativos.', critical: false, invert: false },
+		  // F – Protetores (invert)
+		  { id: 'F1', section: 'F', text: 'Senti forte motivo para viver (filhos, fé, projetos, responsabilidades).', critical: false, invert: true },
+		  { id: 'F2', section: 'F', text: 'Busquei e usei ativamente apoio (familiares, amigos, tratamento, recursos).', critical: false, invert: true },
+		];
+		
+		// ------------------ Renderização ------------------
+		const grid = document.querySelector('.grid');
+		function render() {
+		  sections.forEach(sec => {
+		    const secEl = document.createElement('section');
+		    secEl.className = 'section';
+		    secEl.innerHTML = `<h2>${sec.title}</h2><div class="help">${sec.help}</div>`;
+		
+		    items.filter(i => i.section === sec.code).forEach(it => {
+		      const itemEl = document.createElement('div');
+		      itemEl.className = 'item' + (it.critical ? ' critical' : '');
+		      const pills = [];
+		      if (it.critical) pills.push('<span class="pill crit" title="Item crítico (peso 1,5)">crítico</span>');
+		      if (it.invert) pills.push('<span class="pill inv" title="Pontuação invertida (4 − resposta)">invertido</span>');
+		
+		      itemEl.innerHTML = `
+		        <div class="item-label">
+		          <strong>${it.id}.</strong>
+		          <div>${it.text}</div>
+		          <div style="flex:1"></div>
+		          ${pills.join(' ')}
+		        </div>
+		        <div class="likert" role="radiogroup" aria-label="${it.id}">
+		          ${[0,1,2,3,4].map(v => `
+		            <label>
+		              <input type="radio" name="${it.id}" value="${v}" aria-label="${v}">
+		              <span>${v}</span>
+		            </label>
+		          `).join('')}
+		        </div>
+		      `;
+		      secEl.appendChild(itemEl);
+		    });
+		
+		    grid.appendChild(secEl);
+		  });
+		}
+		render();
+		
+		// ------------------ Utilitários ------------------
+		function getResponses() { const resp = {}; items.forEach(it => { const sel = document.querySelector(`input[name="${it.id}"]:checked`); resp[it.id] = sel ? Number(sel.value) : null; }); return resp; }
+		function classify(ir) { return thresholds.find(t => ir >= t.min && ir <= t.max); }
+		function elevateLevel(label) { const order = ['Sem risco', 'Risco mínimo', 'Risco moderado', 'Risco grave']; const idx = Math.min(order.indexOf(label) + 1, order.length - 1); return order[idx]; }
+		
+		// ------------------ Notas por nível ------------------
+		function notesFor(label){
+		  const map={
+		    'Sem risco':[ 'Documente fatores protetores e ausência de pensamento suicida ativo/planejamento.', 'Defina sinais de alerta a monitorar e combine reaplicação do instrumento em mudanças clínicas.', 'Mantenha confidencialidade padrão e informe limites de forma breve.' ],
+		    'Risco mínimo':[ 'Registre pensamento suicida (incluindo ideias mais passivas de morrer) e contexto. Especifique ausência de plano/meios.', 'Explique limites de confidencialidade e combine check-in breve entre sessões se necessário.', 'Planeje restrição preventiva de meios com passos concretos e responsáveis.' ],
+		    'Risco moderado':[ 'Registre citações curtas do paciente entre aspas sobre pensamento/intenções/planos e meios; descreva fatores precipitantes.', 'Registre consentimentos, contatos ativados e justificativa técnica para conduta/encaminhamentos.', 'Defina acompanhamento em 48–72h e responsabilidades de cada membro da rede.' ],
+		    'Risco grave':[ 'Registre avaliação de iminência: plano detalhado, intenção, acesso a meios e ausência de proteção.', 'Documente decisão de acionar urgência/internação e a justificativa clínica, incluindo comunicação de limites de confidencialidade.', 'Descreva ações de contenção e quem ficará responsável pela supervisão até o acolhimento.' ]
+		  };
+		  const items=(map[label]||[]).map(li=>`<li>${li}</li>`).join('');
+		  return `<h4 style="margin:.2rem 0 .4rem">Notas essenciais (${label})</h4><ol>${items}</ol>`;
+		}
+		
+		// ------------------ Modificadores por condição (ajustados ao risco) ------------------
+		function modifiersFor(label){
+		  const block=(title,lines)=>`<div style="margin:.6rem 0"><strong>${title}:</strong><ul style="margin:.3rem 0 0 1rem">${lines.map(l=>`<li>${l}</li>`).join('')}</ul></div>`;
+		  const byLevel={
+		    'Sem risco':{
+		      'Transtornos do humor':[ 'Psicoeducação; ativação comportamental leve (agenda simples de atividades prazerosas e de domínio).', 'Monitorar desesperança e pensamento suicida (incluindo ideias mais passivas de morrer).' ],
+		      'Uso de substâncias':[ 'FRAMES para redução de risco; mapa de gatilhos; evitar decisões sob efeito.' ],
+		      'Personalidade/Desregulação/Impulsividade':[ 'Habilidades básicas (tolerância ao estresse, mindfulness breve).', 'Contrato claro de sessão e metas de segurança.' ],
+		      'Psicóticos':[ 'Rastreamento de sintomas; orientar busca precoce se alucinações/delírios se intensificarem.' ]
+		    },
+		    'Risco mínimo':{
+		      'Transtornos do humor':[ 'Ativação comportamental estruturada (agenda de atividades prazerosas e de domínio, metas SMART, registro diário); avaliar necessidade de avaliação psiquiátrica.', 'Checar adesão medicamentosa (se houver); monitorar desesperança.' ],
+		      'Uso de substâncias':[ 'FRAMES focado em redução/abstinência; estratégias para craving (atraso 20 min, evitar gatilhos, plano de substituição).', 'Considerar CAPS AD (Álcool e Drogas) conforme gravidade.' ],
+		      'Personalidade/Desregulação/Impulsividade':[ 'Treino de habilidades (técnica STOP, aterramento 5-4-3-2-1).', 'Planejar manejo de crises entre sessões (ligação curta pactuada).' ],
+		      'Psicóticos':[ 'Se sintomas ativos leves: contato com psiquiatria; orientar familiar sobre sinais de alerta.' ]
+		    },
+		    'Risco moderado':[{
+		      'Transtornos do humor':[ 'Avaliação psiquiátrica priorizada; possível ajuste farmacológico.', 'Ativação comportamental estruturada (agenda de atividades, metas SMART, monitoramento diário); apoio familiar.' ],
+		      'Uso de substâncias':[ 'Risco de recaída/impulsividade: considerar desintoxicação supervisionada; envolver CAPS AD (Álcool e Drogas).', 'Plano claro de sobriedade para 72h (lista de atividades substitutivas, evitar gatilhos e pares de uso, contatos de suporte, locais seguros, plano hora-a-hora).' ],
+		      'Personalidade/Desregulação/Impulsividade':[ 'Plano de Habilidades TDC (Terapia Dialética Comportamental) focal: tolerância ao estresse, regulação emocional, eficácia interpessoal.', 'Definir limites e plano de contato entre sessões; prevenir rupturas terapêuticas.' ],
+		      'Psicóticos':[ 'Se comando alucinatório ou delírio de culpa/periculosidade: avaliação urgente; otimização antipsicótica.', 'Envolver família; reduzir estímulos; checar adesão.' ]
+		    }][0],
+		    'Risco grave':{
+		      'Transtornos do humor':[ 'Urgência psiquiátrica; avaliar internação; segurança 24–48h.', 'Suspender disponibilidade de meios; supervisão familiar contínua até acolhimento.' ],
+		      'Uso de substâncias':[ 'Alta letalidade sob intoxicação: não atender sozinho; acionar rede/serviços 24h.', 'Considerar internação/UPA para manejo de intoxicação/abstinência complicada.' ],
+		      'Personalidade/Desregulação/Impulsividade':[ 'Risco iminente: foco em segurança e contenção; evitar interpretações; comunicação clara e validante.', 'Transferência para serviço de crise quando aplicável.' ],
+		      'Psicóticos':[ 'Risco com sintomas de comando: internação/observação; não confrontar delírios; garantir adesão medicamentosa.' ]
+		    }
+		  };
+		  const section=byLevel[label]||{}; let html='<h4 style="margin:.8rem 0 .4rem">Modificadores por condição clínica (ajustados ao risco)</h4>';
+		  Object.entries(section).forEach(([k,v])=>{ html+=block(k,v); });
+		  return html;
+		}
+		
+		// ------------------ Condutas por nível + Plano de Segurança ------------------
+		function planFor(label, resp){
+		  const baseFRAMES = [
+		    '<strong>Intervenção breve – FRAMES (explicado):</strong>',
+		    'F: <em>Feedback</em> objetivo (devolutiva do risco e relação com sintomas).',
+		    'R: <em>Responsabilidade</em> pessoal na decisão de seguir o plano.',
+		    'A: <em>Aconselhamento</em> claro para reduzir risco (restrição de meios, adesão ao cuidado).',
+		    'M: <em>Menu</em> de opções (estratégias internas, contatos, serviços).',
+		    'E: <em>Empatia</em> consistente e não julgadora.',
+		    'S: <em>Autoeficácia</em>: reforçar capacidades, sucessos prévios e pequenos passos.'
+		  ].join('<br>');
+		
+		  const planoSeguranca = [
+		    '<strong>Plano de Segurança (6 passos):</strong>',
+		    '1) <em>Sinais de alerta pessoais</em>: pensamentos/emoções/situações que precedem crise.',
+		    '2) <em>Estratégias internas</em>: respiração 4-6; aterramento 5-4-3-2-1; relaxamento; desescalada verbal consigo.',
+		    '3) <em>Lugares e pessoas que ajudam</em>: locais públicos seguros; companhia disponível.',
+		    '4) <em>Contatos para pedir ajuda</em>: 2–3 pessoas + telefones; frases prontas.',
+		    '5) <em>Profissionais/serviços</em>: terapeuta/psiquiatra; CAPS AD (Álcool e Drogas)/UPA; CVV 188; SAMU 192; PM 190; CBM 193.',
+		    '6) <em>Restrição de meios</em>: retirar/guardar meios letais; supervisionar medicamentos; limitar acesso a locais de risco.'
+		  ].join('<br>');
+		
+		  const blocos = {
+		    'Sem risco': {
+		      cond: [
+		        'Psicoeducação sobre pensamento suicida (incluindo ideias mais passivas de morrer) x pensamento suicida ativo e sinais de alerta pessoais.',
+		        'Fortalecer fatores protetores (rotina, sono, rede, sentido de vida).',
+		        'FRAMES breve como educação motivacional.',
+		        'Agendar retorno regular; reaplicar instrumento se houver mudança clínica.'
+		      ],
+		      anex: []
+		    },
+		    'Risco mínimo': {
+		      cond: [
+		        'Aplicar FRAMES; alinhar expectativa terapêutica e <em>check-in</em> breve entre sessões conforme necessidade.',
+		        'Revisar e, se indicado, iniciar Plano de Segurança <em>apenas se</em> houver pensamento suicida ativo (qualquer A≥1) ou acesso a meios (C1≥2).',
+		        'Combinar restrição preventiva de meios (organizar medicamentos, chaves, supervisão).',
+		        'Retorno em 1–2 semanas.'
+		      ],
+		      anex: []
+		    },
+		    'Risco moderado': {
+		      cond: [
+		        'Elaborar Plano de Segurança estruturado; entregar cópia ao paciente.',
+		        'Envolver rede de apoio com consentimento; definir papéis e contatos.',
+		        'Avaliação psiquiátrica e possível ajuste farmacológico.',
+		        'Follow-up em 48–72h; contato intermediário pactuado.'
+		      ],
+		      anex: [planoSeguranca, baseFRAMES]
+		    },
+		    'Risco grave': {
+		      cond: [
+		        'Encaminhamento emergencial (UPA/serviço de crise); considerar internação conforme risco iminente.',
+		        'Supervisão contínua até transferência para serviço; acionar rede e serviços 24h.',
+		        'Restringir imediatamente meios letais; avaliar segurança do ambiente domiciliar.'
+		      ],
+		      anex: [planoSeguranca]
+		    }
+		  };
+		
+		  const ideacaoAtiva = ['A1','A2','A3','A4'].some(k => resp && resp[k] !== null && resp[k] >= 1);
+		  const acessoMeios = resp && resp['C1'] !== null && resp['C1'] >= 2;
+		
+		  const bloco = blocos[label];
+		  const extra = (label==='Risco mínimo' && (ideacaoAtiva || acessoMeios)) ? [planoSeguranca] : [];
+		
+		  const condHTML = `<p><strong>Conduta sugerida:</strong></p><ol>${bloco.cond.map(c=>`<li>${c}</li>`).join('')}</ol>`;
+		  const anexHTML = [...(bloco.anex||[]), ...extra].length ? `<p>${[...(bloco.anex||[]), ...extra].join('<br><br>')}</p>` : '';
+		  return condHTML + anexHTML;
+		}
+		
+		function framesExtra(){
+		  return [
+		    '<p><strong>FRAMES</strong> é uma intervenção breve motivacional que organiza sua devolutiva e engajamento em seis passos:</p>',
+		    '<ol>',
+		    '<li><strong>F – Feedback</strong>: devolva dados objetivos (EIR-RS, sintomas, eventos) e a relação com o risco.</li>',
+		    '<li><strong>R – Responsabilidade</strong>: destaque que a decisão e as ações são do paciente; você oferece apoio e estrutura.</li>',
+		    '<li><strong>A – Aconselhamento</strong>: recomendações claras e específicas (ex.: restringir meios, manter rotinas, seguir plano).</li>',
+		    '<li><strong>M – Menu de opções</strong>: co-crie alternativas (estratégias internas, pessoas de apoio, serviços 24h).</li>',
+		    '<li><strong>E – Empatia</strong>: postura validante e não julgadora.</li>',
+		    '<li><strong>S – Autoeficácia</strong>: reforço de capacidades, lembrar sucessos prévios e definir pequenos passos viáveis.</li>',
+		    '</ol>',
+		    '<p><em>Dica prática:</em> use linguagem simples, escreva 1–3 ações concretas para a próxima semana e combine como será monitorado.</p>'
+		  ].join('');
+		}
+		
+		// ------------------ Cálculo principal ------------------
+		function compute() {
+		  const resp = getResponses();
+		  const missing = Object.values(resp).filter(v => v === null).length;
+		  const criticalMissing = items.some(it => it.critical && resp[it.id] === null);
+		
+		  let answeredWeight = 0, weightedSum = 0;
+		  items.forEach(it => {
+		    let v = resp[it.id];
+		    if (v !== null) {
+		      if (it.invert) v = 4 - v;
+		      const w = it.critical ? weights.critical : weights.default;
+		      answeredWeight += w;
+		      weightedSum += v * w;
+		    }
+		  });
+		
+		  const anyCritical4 = items.some(it => it.critical && resp[it.id] === 4);
+		  const d2High = resp['D2'] !== null && resp['D2'] >= 3;
+		  const c1High = resp['C1'] !== null && resp['C1'] >= 3;
+		  const b3Mid = resp['B3'] !== null && resp['B3'] >= 2;
+		
+		  const ovFlags = [];
+		  if (anyCritical4) ovFlags.push('Crítico=4');
+		  if (d2High) ovFlags.push('D2≥3');
+		  if (c1High && b3Mid) ovFlags.push('C1≥3 & B3≥2');
+		
+		  const totalW = items.reduce((acc, it) => acc + (it.critical ? weights.critical : weights.default), 0);
+		  let IR, validityNote = '';
+		  if (missing === 0) { IR = weightedSum; validityNote = 'Completo'; }
+		  else if (missing <= 2 && !criticalMissing) { const mean = weightedSum / answeredWeight; IR = mean * totalW; validityNote = `Proration aplicado (faltantes: ${missing})`; }
+		  else { return { invalid: true, reason: `Escala inválida: ${missing} faltantes${criticalMissing ? ', incluindo item crítico' : ''}.` }; }
+		
+		  let cls = classify(IR);
+		  if (anyCritical4 || d2High) { cls = thresholds[3]; }
+		  else if (c1High && b3Mid) { const elevated = elevateLevel(cls.label); cls = thresholds.find(t => t.label === elevated) || thresholds[3]; }
+		
+		  return { IR: Math.round(IR * 10) / 10, classLabel: cls.label, classCss: cls.css, overrides: ovFlags.length ? ovFlags.join(', ') : 'Nenhum', missing, validityNote, resp };
+		}
+		
+		function mapOverrides(txt){
+		  if(!txt || txt==='Nenhum') return 'Nenhum';
+		  return txt
+		    .replaceAll('Crítico=4','Algum item crítico marcado como 4 (eleva automaticamente para Risco Grave)')
+		    .replaceAll('D2≥3','Tentativa/gesto nos últimos 12 meses com intensidade alta (D2 ≥ 3)')
+		    .replaceAll('C1≥3 & B3≥2','Acesso alto a meios (C1 ≥ 3) combinado com decisão de quando/onde (B3 ≥ 2)');
+		}
+		
+		// ------------------ UI ------------------
+		const calcBtn = document.getElementById('calcBtn');
+		const clearBtn = document.getElementById('clearBtn');
+		const printBtn = document.getElementById('printBtn');
+		
+		calcBtn.addEventListener('click', () => {
+		  const out = compute();
+		  const res = document.getElementById('results');
+		  if (out.invalid) {
+		    res.hidden = false;
+		    document.getElementById('irVal').textContent = 'Inválido';
+		    document.getElementById('classVal').innerHTML = '<span class="badge risk-high">Reaplicar/entrevista</span>';
+		    document.getElementById('ovVal').textContent = '—';
+		    document.getElementById('missVal').textContent = out.reason;
+		    document.getElementById('planText').innerHTML = '<p>Entrevista clínica imediata. Não tomar decisões apenas pelo instrumento.</p>';
+		    document.getElementById('notesText').innerHTML = '—';
+		    document.getElementById('extraDetails').hidden = true;
+		    document.getElementById('extraText').innerHTML = '';
+		    return;
+		  }
+		
+		  res.hidden = false;
+		  document.getElementById('irVal').textContent = `${out.IR} / 82`;
+		  document.getElementById('classVal').innerHTML = `<span class="badge ${out.classCss}">${out.classLabel}</span>`;
+		  document.getElementById('ovVal').textContent = mapOverrides(out.overrides);
+		  document.getElementById('missVal').textContent = `${out.missing} (${out.validityNote})`;
+		
+		  document.getElementById('planText').innerHTML = planFor(out.classLabel, out.resp);
+		  document.getElementById('notesText').innerHTML = notesFor(out.classLabel) + modifiersFor(out.classLabel);
+		
+		  const extra = document.getElementById('extraDetails');
+		  const needsFRAMES = ['Sem risco','Risco mínimo','Risco moderado'].includes(out.classLabel);
+		  if(needsFRAMES){ extra.hidden = false; document.getElementById('extraText').innerHTML = framesExtra(); }
+		  else { extra.hidden = true; document.getElementById('extraText').innerHTML = ''; }
+		});
+		
+		clearBtn.addEventListener('click', () => {
+		  document.getElementById('eirForm').reset();
+		  document.getElementById('results').hidden = true;
+		  document.getElementById('extraDetails').hidden = true;
+		  document.getElementById('extraText').innerHTML = '';
+		  window.scrollTo({ top: 0, behavior: 'smooth' });
+		});
+		
+		printBtn.addEventListener('click', () => window.print());
+	</script>
 </body>
+
 </html>
 
