@@ -1,4 +1,4 @@
-name: Aplicar padrão ICAPS aos rastreios
+name: EIR-RS — identidade e interface protegidas
 on:
   push:
     branches: [main]
@@ -9,30 +9,67 @@ permissions:
 jobs:
   apply:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: Inject shared design system without changing questionnaire content
+      - name: Preserve safety flow and enforce canonical identity
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p=Path('index.html'); html=p.read_text(encoding='utf-8'); original=html
+
+          p=Path('index.html')
+          html=p.read_text(encoding='utf-8')
+          marker='\n\t\t\t<form id="eirForm" aria-describedby="desc">'
+          if marker not in html:
+              raise SystemExit('EIR_FORM_MARKER_MISSING')
+
+          before, protected=html.split(marker,1)
+          original_protected=protected
+
+          old='''\t\t\t\t<div class="field"><label for="paciente">Nome completo do paciente</label><input id="paciente" name="paciente" placeholder="Ex.: João da Silva" required></div>\n\t\t\t\t<div class="field"><label for="idade">Idade</label><input id="idade" name="idade" type="number" min="5" max="120" placeholder="Ex.: 34"></div>\n\t\t\t\t<div class="field"><label for="data">Data do rastreio</label><input id="data" name="data" type="date"></div>'''
+          new='''\t\t\t\t<div class="field"><label for="paciente">Nome completo do paciente</label><input id="paciente" name="paciente" placeholder="Ex.: João da Silva" required></div>\n\t\t\t\t<div class="field"><label for="idade">Idade</label><input id="idade" name="idade" type="number" min="5" max="120" placeholder="Ex.: 34"></div>\n\t\t\t\t<div class="field"><label for="dataNascimento">Data de nascimento</label><input id="dataNascimento" name="dataNascimento" type="date" required></div>\n\t\t\t\t<div class="field"><label for="data">Data de aplicação do rastreio</label><input id="data" name="data" type="date" required></div>'''
+
+          if 'id="dataNascimento"' not in before:
+              if old not in before:
+                  raise SystemExit('IDENTITY_BLOCK_NOT_FOUND')
+              before=before.replace(old,new,1)
+
+          out=before+marker+protected
+          if out.split(marker,1)[1] != original_protected:
+              raise SystemExit('SAFETY_FORM_OR_LOGIC_CHANGED')
+
           css='  <link rel="stylesheet" href="https://ricmurtapsicologia.github.io/plataforma.terapeutica/assets/css/screening-uniformity-v1.css?v=1.0.0">\n'
           js='  <script src="https://ricmurtapsicologia.github.io/plataforma.terapeutica/assets/js/screening-uniformity-v1.js?v=1.0.0" defer></script>\n'
-          if 'screening-uniformity-v1.css' not in html:
-              if '</head>' not in html: raise SystemExit('HEAD_END_NOT_FOUND')
-              html=html.replace('</head>',css+'</head>',1)
-          if 'screening-uniformity-v1.js' not in html:
-              if '</body>' not in html: raise SystemExit('BODY_END_NOT_FOUND')
-              html=html.replace('</body>',js+'</body>',1)
-          if html==original: raise SystemExit('ALREADY_APPLIED')
-          p.write_text(html,encoding='utf-8')
+          if 'screening-uniformity-v1.css' not in out:
+              if '</head>' not in out: raise SystemExit('HEAD_END_NOT_FOUND')
+              out=out.replace('</head>',css+'</head>',1)
+          if 'screening-uniformity-v1.js' not in out:
+              if '</body>' not in out: raise SystemExit('BODY_END_NOT_FOUND')
+              out=out.replace('</body>',js+'</body>',1)
+
+          for token in ['id="paciente"','id="dataNascimento"','id="data"','Data de aplicação do rastreio']:
+              if token not in out:
+                  raise SystemExit(f'MISSING_{token}')
+
+          p.write_text(out,encoding='utf-8')
           PY
-      - run: grep -q 'screening-uniformity-v1.css' index.html && grep -q 'screening-uniformity-v1.js' index.html
-      - name: Commit
+      - name: Validate critical safety boundary
+        shell: bash
         run: |
+          grep -q 'id="dataNascimento"' index.html
+          grep -q 'Data de aplicação do rastreio' index.html
+          grep -q '<form id="eirForm" aria-describedby="desc">' index.html
+          grep -q 'id="calcBtn"' index.html
+          grep -q 'id="results"' index.html
+          grep -q 'screening-uniformity-v1.css' index.html
+          grep -q 'screening-uniformity-v1.js' index.html
+      - name: Commit if needed
+        shell: bash
+        run: |
+          if git diff --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Aplica experiência visual unificada de rastreio'
+          git commit -m 'Adiciona identificação canônica ao EIR-RS sem alterar fluxo de segurança'
           git push
