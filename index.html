@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
 
+<html lang="pt-BR">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>EIR-RS – Escala Integrada de Risco de Suicídio (Triagem)</title>
-	<!-- URL canônica -->
-	<link rel="canonical" href="https://ricmurtapsicologia.github.io/TriagemRiscoSuicidio/" />
-	<!-- Favicon -->
-	<link rel="icon" type="image/png" href="https://i.pinimg.com/736x/d9/05/47/d90547059a00ec26b02c182e15a24033.jpg" />
-	<!-- Open Graph para pré-visualização no WhatsApp -->
-	<meta property="og:title" content="EIR-RS – Escala Integrada de Risco de Suicídio (Triagem)" />
-	<meta property="og:description" content="Ferramenta clínica para triagem e avaliação de risco de suicídio." />
-	<meta property="og:image" content="https://i.pinimg.com/736x/d9/05/47/d90547059a00ec26b02c182e15a24033.jpg" />
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://ricmurtapsicologia.github.io/TriagemRiscoSuicidio/" />
-	<style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>EIR-RS — Escala Integrada de Risco de Suicídio</title>
+<!-- URL canônica -->
+<link href="https://ricmurtapsicologia.github.io/TriagemRiscoSuicidio/" rel="canonical"/>
+<!-- Favicon -->
+
+<!-- Open Graph para pré-visualização no WhatsApp -->
+<meta content="EIR-RS — Escala Integrada de Risco de Suicídio" property="og:title"/>
+<meta content="Ferramenta clínica para triagem e avaliação de risco de suicídio." property="og:description"/>
+<meta content="https://ricmurtapsicologia.github.io/Inicio-de-Jornada-Terapeutica/assets/heroes/risco.jpg?v=4.0.0" property="og:image"/>
+<meta content="website" property="og:type"/>
+<meta content="https://ricmurtapsicologia.github.io/TriagemRiscoSuicidio/" property="og:url"/>
+<style>
 		/* =========================
 		   Variáveis e Resets
 		========================== */
@@ -272,82 +272,81 @@
 		  .field input, .field select{ border-color:#888; color:#000; }
 		}
 	</style>
-  <link rel="stylesheet" href="https://ricmurtapsicologia.github.io/Inicio-de-Jornada-Terapeutica/assets/screening-uniformity-v1.css?v=2.2.1-decoupled">
+<link href="https://ricmurtapsicologia.github.io/Inicio-de-Jornada-Terapeutica/assets/screening-uniformity-v1.css?v=4.0.0" rel="stylesheet"/>
 </head>
-
 <body>
-	<div class="wrap">
-		<div class="card">
-			<h1>EIR-RS – Escala Integrada de Risco de Suicídio (Triagem)</h1>
-			<div class="idgrid" aria-label="Identificação do paciente">
-				<div class="field"><label for="paciente">Nome completo do paciente</label><input id="paciente" name="paciente" placeholder="Ex.: João da Silva" required></div>
-				<div class="field"><label for="idade">Idade</label><input id="idade" name="idade" type="number" min="5" max="120" placeholder="Ex.: 34"></div>
-				<div class="field"><label for="dataNascimento">Data de nascimento</label><input id="dataNascimento" name="dataNascimento" type="date" required></div>
-				<div class="field"><label for="data">Data de aplicação do rastreio</label><input id="data" name="data" type="date" required></div>
-				<div class="field"><label for="contato">Contato de emergência (nome/telefone)</label><input id="contato" name="contato" placeholder="Ex.: Maria, (31) 9xxxx-xxxx"></div>
-				<div class="field"><label for="responsavel">Profissional responsável</label><input id="responsavel" name="responsavel" placeholder="Seu nome/registro"></div>
-				<div class="field"><label for="obs">Observações relevantes</label><input id="obs" name="obs" placeholder="Ex.: diagnóstico principal, medicação, gatilhos"></div>
-			</div>
-			<div class="sub">Janela temporal: <strong>últimos 14 dias</strong> (itens de histórico indicados). &nbsp;|&nbsp; Respostas: 0= Nunca · 1= Raramente · 2= Às vezes · 3= Frequentemente · 4= Quase sempre</div>
-			<p class="help"><strong>Instrução ao paciente:</strong> “Pense nas últimas duas semanas e marque a opção que melhor descreve o que você sentiu ou fez. Nos itens de histórico, responda considerando toda a sua vida.”</p>
-			<form id="eirForm" aria-describedby="desc">
-				<div class="grid"></div>
-				<div class="actions">
-					<button type="button" id="calcBtn">Calcular escore</button>
-					<button type="button" class="secondary" id="clearBtn">Limpar respostas</button>
-					<button type="button" class="secondary" id="printBtn">Imprimir / PDF</button>
-				</div>
-			</form>
-			<div id="results" class="results" hidden>
-				<h3>Resultado</h3>
-				<div class="kvs">
-					<div class="kv">
-						<div class="label">Índice de Risco (IR) / máx. 82</div>
-						<div id="irVal" class="value">—</div>
-					</div>
-					<div class="kv">
-						<div class="label">Classificação</div>
-						<div id="classVal" class="value">—</div>
-					</div>
-					<div class="kv">
-						<div class="label">Regras automáticas que aumentam a classificação (sinais de alerta)</div>
-						<div id="ovVal" class="value">—</div>
-					</div>
-					<div class="kv">
-						<div class="label">Itens sem resposta</div>
-						<div id="missVal" class="value">—</div>
-					</div>
-				</div>
-				<details id="notesDetails" style="margin-top:12px;">
-					<summary>Notas essenciais e modificadores por condição <span style="opacity:.8">(toque/clique para abrir)</span></summary>
-					<div id="notesText" style="margin-top:8px; line-height:1.55"></div>
-				</details>
-				<details id="extraDetails" style="margin-top:12px;" hidden>
-					<summary>Extra – FRAMES (o que é e como aplicar) <span style="opacity:.8">(toque/clique para abrir)</span></summary>
-					<div id="extraText" style="margin-top:8px; line-height:1.55"></div>
-				</details>
-				<details id="planDetails" style="margin-top:12px;">
-					<summary>Plano de Segurança e Conduta <span style="opacity:.8">(toque/clique para abrir)</span></summary>
-					<div id="planText" style="margin-top:8px; line-height:1.55"></div>
-				</details>
-				<details id="resourcesDetails" style="margin-top:12px;">
-					<summary>Recursos 24h <span style="opacity:.8">(toque/clique para abrir)</span></summary>
-					<ul id="resources" style="margin:8px 0 0 18px; line-height:1.5">
-						<li>CVV – 188 (telefone/24h) e chat em <em>cvv.org.br</em></li>
-						<li>SAMU – 192 (emergências médicas)</li>
-						<li>Polícia Militar – 190 (risco imediato de violência)</li>
-						<li>Corpo de Bombeiros Militar – 193 (emergências e resgates)</li>
-						<li>UPA/Hospital de referência psiquiátrica local / CAPS AD (Álcool e Drogas)</li>
-					</ul>
-				</details>
-			</div>
-			<div class="footer">
-				<p><strong>Notas:</strong> Itens críticos (peso 1,5): A3, B3, B4, C2, D3. Protetores (F1, F2) têm escore invertido. Regras automáticas que aumentam a classificação: qualquer crítico = 4 ou D2 ≥ 3 → classificar como <em>Risco Grave</em>; se C1 ≥ 3 e B3 ≥ 2 → elevar um nível. Válido com até 2 itens faltantes e nenhum crítico faltante (aplica-se <em>proration</em> ponderado); caso contrário, inválido.</p>
-				<p style="margin-top:8px; opacity:.9">Richelmy Murta — Psicólogo Clínico, Especialista em Terapia Cognitivo-Comportamental</p>
-			</div>
-		</div>
-	</div>
-	<script>
+<div class="wrap">
+<div class="card">
+<h1>EIR-RS – Escala Integrada de Risco de Suicídio (Triagem)</h1>
+<div aria-label="Identificação do paciente" class="idgrid">
+<div class="field"><label for="paciente">Nome completo do paciente</label><input id="paciente" name="paciente" placeholder="Ex.: João da Silva" required=""/></div>
+<div class="field"><label for="idade">Idade</label><input id="idade" max="120" min="5" name="idade" placeholder="Ex.: 34" type="number"/></div>
+<div class="field"><label for="dataNascimento">Data de nascimento</label><input id="dataNascimento" name="dataNascimento" required="" type="date"/></div>
+<div class="field"><label for="data">Data de aplicação do rastreio</label><input id="data" name="data" required="" type="date"/></div>
+<div class="field"><label for="contato">Contato de emergência (nome/telefone)</label><input id="contato" name="contato" placeholder="Ex.: Maria, (31) 9xxxx-xxxx"/></div>
+<div class="field"><label for="responsavel">Profissional responsável</label><input id="responsavel" name="responsavel" placeholder="Seu nome/registro"/></div>
+<div class="field"><label for="obs">Observações relevantes</label><input id="obs" name="obs" placeholder="Ex.: diagnóstico principal, medicação, gatilhos"/></div>
+</div>
+<div class="sub">Janela temporal: <strong>últimos 14 dias</strong> (itens de histórico indicados).  |  Respostas: 0= Nunca · 1= Raramente · 2= Às vezes · 3= Frequentemente · 4= Quase sempre</div>
+<p class="help"><strong>Instrução ao paciente:</strong> “Pense nas últimas duas semanas e marque a opção que melhor descreve o que você sentiu ou fez. Nos itens de histórico, responda considerando toda a sua vida.”</p>
+<form aria-describedby="desc" id="eirForm">
+<div class="grid"></div>
+<div class="actions">
+<button id="calcBtn" type="button">Calcular escore</button>
+<button class="secondary" id="clearBtn" type="button">Limpar respostas</button>
+<button class="secondary" id="printBtn" type="button">Imprimir / PDF</button>
+</div>
+</form>
+<div class="results" hidden="" id="results">
+<h3>Resultado</h3>
+<div class="kvs">
+<div class="kv">
+<div class="label">Índice de Risco (IR) / máx. 82</div>
+<div class="value" id="irVal">—</div>
+</div>
+<div class="kv">
+<div class="label">Classificação</div>
+<div class="value" id="classVal">—</div>
+</div>
+<div class="kv">
+<div class="label">Regras automáticas que aumentam a classificação (sinais de alerta)</div>
+<div class="value" id="ovVal">—</div>
+</div>
+<div class="kv">
+<div class="label">Itens sem resposta</div>
+<div class="value" id="missVal">—</div>
+</div>
+</div>
+<details id="notesDetails" style="margin-top:12px;">
+<summary>Notas essenciais e modificadores por condição <span style="opacity:.8">(toque/clique para abrir)</span></summary>
+<div id="notesText" style="margin-top:8px; line-height:1.55"></div>
+</details>
+<details hidden="" id="extraDetails" style="margin-top:12px;">
+<summary>Extra – FRAMES (o que é e como aplicar) <span style="opacity:.8">(toque/clique para abrir)</span></summary>
+<div id="extraText" style="margin-top:8px; line-height:1.55"></div>
+</details>
+<details id="planDetails" style="margin-top:12px;">
+<summary>Plano de Segurança e Conduta <span style="opacity:.8">(toque/clique para abrir)</span></summary>
+<div id="planText" style="margin-top:8px; line-height:1.55"></div>
+</details>
+<details id="resourcesDetails" style="margin-top:12px;">
+<summary>Recursos 24h <span style="opacity:.8">(toque/clique para abrir)</span></summary>
+<ul id="resources" style="margin:8px 0 0 18px; line-height:1.5">
+<li>CVV – 188 (telefone/24h) e chat em <em>cvv.org.br</em></li>
+<li>SAMU – 192 (emergências médicas)</li>
+<li>Polícia Militar – 190 (risco imediato de violência)</li>
+<li>Corpo de Bombeiros Militar – 193 (emergências e resgates)</li>
+<li>UPA/Hospital de referência psiquiátrica local / CAPS AD (Álcool e Drogas)</li>
+</ul>
+</details>
+</div>
+<div class="footer">
+<p><strong>Notas:</strong> Itens críticos (peso 1,5): A3, B3, B4, C2, D3. Protetores (F1, F2) têm escore invertido. Regras automáticas que aumentam a classificação: qualquer crítico = 4 ou D2 ≥ 3 → classificar como <em>Risco Grave</em>; se C1 ≥ 3 e B3 ≥ 2 → elevar um nível. Válido com até 2 itens faltantes e nenhum crítico faltante (aplica-se <em>proration</em> ponderado); caso contrário, inválido.</p>
+<p style="margin-top:8px; opacity:.9">Richelmy Murta — Psicólogo Clínico, Especialista em Terapia Cognitivo-Comportamental</p>
+</div>
+</div>
+</div>
+<script>
 		// ------------------ Definição do instrumento ------------------
 		const weights = { default: 1.0, critical: 1.5 };
 		const thresholds = [
@@ -663,8 +662,6 @@
 		
 		printBtn.addEventListener('click', () => window.print());
 	</script>
-  <script src="https://ricmurtapsicologia.github.io/Inicio-de-Jornada-Terapeutica/assets/screening-uniformity-v1.js?v=2.2.1-decoupled" defer></script>
+<script defer="" src="https://ricmurtapsicologia.github.io/Inicio-de-Jornada-Terapeutica/assets/screening-uniformity-v1.js?v=4.0.0"></script>
 </body>
-
 </html>
-
